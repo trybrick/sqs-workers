@@ -1,0 +1,17 @@
+{
+  "name": "sqs-workers",
+  "description": "Brick sqs workers",
+  "version": "0.0.1",
+  "dependencies": {
+    "Buffer": "^0.0.0",
+    "aws-sdk": "^2.2.34",
+    "azure-storage-simple": "^0.6.0",
+    "filehose": "^0.1.2",
+    "ftp": "^0.3.10",
+    "lodash": "^4.6.1",
+    "moment": "^2.11.2",
+    "request": "^2.69.0",
+    "sqs-consumer": "^3.1.2",
+    "yargs": "^4.2.0"
+  }
+}
