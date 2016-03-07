@@ -1,7 +1,10 @@
 var async = require('async');
-var request = require('request');
+var https = require('https');
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
+var config = {
+  FTP_API_KEY: process.env.FTP_API_KEY
+};
 
 // this is not a long running job and it should be on AWS Lambda
 // we have it here as an example of a sqs-workers job
@@ -25,16 +28,31 @@ module.exports = {
       },
       function deleteFile(response, next) {
         var filePath = response.Metadata.ftp.replace(/^\/+|\/+$/gi, '');
-        var auth = "Basic " + new Buffer(config.FTP_API_KEY + ":x").toString("base64");
+        // var auth = "Basic " + new Buffer(config.FTP_API_KEY + ":x").toString("base64");
         var opts = {
           method: 'DELETE',
-          uri: `https://brickinc.brickftp.com/files/${filePath}`,
-          headers: {
-            "Authorization": auth
-          }
+          host: 'brickinc.brickftp.com',
+          port: 443,
+          path: `/files/${filePath}`,
+          auth: config.FTP_API_KEY + ":x"
         };
 
-        request(opts, next);
+        // request(opts, next);
+        var req = https.request(opts, function(res) {
+          console.log('statusCode: ', res.statusCode);
+          console.log('headers: ', res.headers);
+
+          res.on('data', (d) => {
+            process.stdout.write(d);
+          });
+
+          next();
+        });
+        req.on('error', (e) => {
+          console.error(e);
+          next(e);
+        });
+        req.end();
       }
     ], function(err) {
       if (err) {
