@@ -7,12 +7,14 @@
     "async": "^1.5.2",
     "aws-sdk": "^2.2.34",
     "azure-storage-simple": "^0.6.0",
+    "bluebird": "^3.3.3",
     "filehose": "^0.1.2",
     "ftp": "^0.3.10",
     "lodash": "^4.6.1",
     "moment": "^2.11.2",
     "request": "^2.69.0",
     "sqs-consumer": "^3.1.2",
+    "unzip": "^0.1.11",
     "yargs": "^4.2.0"
   }
 }

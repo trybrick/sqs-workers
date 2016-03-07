@@ -20,7 +20,6 @@ AWS.config.update({
 
 module.exports = function(queueId, workerFile) {
   queueId = queueId.replace(/^\/+|\/+$/gi, '');
-  var worker = require(workerFile);
   var app = Consumer.create({
     queueUrl: `${config.QueuePrefix}/${queueId}`,
     visibilityTimeout: 60,
@@ -28,7 +27,6 @@ module.exports = function(queueId, workerFile) {
       config.messageCount++;
       config.lastActionTime = new Date();
       config.isRunning = true;
-      currentCallback = done;
       var msg = JSON.parse(message.Body);
       if (msg.Event === 's3:TestEvent') {
         console.log('skip test event')
@@ -36,8 +34,11 @@ module.exports = function(queueId, workerFile) {
         return;
       }
 
-      worker.handler(msg, {
-        done: done
+      require(workerFile).handler(msg, {
+        done: function(err) {
+          config.lastActionTime = new Date();
+          done(err);
+        }
       })
     }
   });
@@ -56,7 +57,7 @@ module.exports = function(queueId, workerFile) {
   function handleIdle() {
     var currentTime = new Date();
     var diffMs = (currentTime - (config.lastActionTime || config.startTime));
-    console.log(diffMs);
+    console.log(config.isRunning ? 'running' : 'idle', diffMs);
 
     if (!config.isRunning && diffMs > idleLimit) {
       console.log('idle timeout...')
@@ -75,9 +76,6 @@ module.exports = function(queueId, workerFile) {
   process.on('uncaughtException', function(err) {
     // handle the error safely
     console.log('uncaught error: ' + err)
-    if (currentCallback) {
-      currentCallback();
-    }
   })
 
   console.log('start');
