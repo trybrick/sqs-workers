@@ -38,7 +38,8 @@ module.exports = function(queueId, workerFile) {
         done: function(err) {
           config.lastActionTime = new Date();
           done(err);
-        }
+        },
+        config: config
       })
     }
   });

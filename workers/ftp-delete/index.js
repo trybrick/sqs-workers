@@ -17,23 +17,22 @@ module.exports = {
     var srcKey = decodeURIComponent(
       record.object.key.replace(/\+/g, ' ')
     );
-    var bucketFrom = {
-      Bucket: srcBucket,
-      Key: srcKey
-    };
+    var fileParts = srcKey.split('/');
+    var goodParts = fileParts.slice(3);
+    var myPath = goodParts.join('/');
+    if (context.config) {
+      config.FTP_API_KEY = context.config.FTP_API_KEY;
+    }
 
     async.waterfall([
-      function download(next) {
-        s3.headObject(bucketFrom, next);
-      },
-      function deleteFile(response, next) {
-        var filePath = response.Metadata.ftp.replace(/^\/+|\/+$/gi, '');
+      function deleteFile(next) {
+        var filePath = `FTPRoot/${myPath}`;
         console.log('deleting: ', filePath);
         var opts = {
           method: 'DELETE',
           host: 'brickinc.brickftp.com',
           port: 443,
-          path: `/files/${filePath}`,
+          path: `/api/rest/v1/files/${filePath}`,
           auth: config.FTP_API_KEY + ":x"
         };
 
