@@ -28,7 +28,7 @@ module.exports = {
       },
       function deleteFile(response, next) {
         var filePath = response.Metadata.ftp.replace(/^\/+|\/+$/gi, '');
-        // var auth = "Basic " + new Buffer(config.FTP_API_KEY + ":x").toString("base64");
+        console.log('deleting: ', filePath);
         var opts = {
           method: 'DELETE',
           host: 'brickinc.brickftp.com',
