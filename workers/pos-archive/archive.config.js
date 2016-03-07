@@ -118,9 +118,15 @@ module.exports = {
     });
 
     var theDate = moment(newRecord.PurchaseDateRaw, 'MM/DD/YYYY');
+    var upc = (newRecord.UPC + '');
+    if (upc.length <= 12) {
+      upc = ('0000000000000' + newRecord.UPC).slice(-12);
+    } else {
+      upc = ('0000000000000' + newRecord.UPC).slice(-13);
+    }
 
     newRecord.PurchaseDate = theDate.format("YYYY-MM-DD");
-    newRecord.UPC = ('0000000000000' + newRecord.UPC).slice(-13);
+    newRecord.UPC = upc;
     newRecord.Quantity = parseFloat(newRecord.Quantity || '1');
     newRecord.ChainId = chainId;
     newRecord.PurchasePrice = parseFloat((newRecord.PurchasePrice + '').replace(/[^\d.-]/g, '') || '0');
