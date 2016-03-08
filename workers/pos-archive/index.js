@@ -14,6 +14,7 @@ var logMessages = [];
 var today = new Date();
 var myDir = path.join(config.workDir, today.getTime() + '');
 mkdirp.sync(myDir);
+config.workDir = myDir;
 
 var log = function() {
   // do some custom log recording
