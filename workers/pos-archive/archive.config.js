@@ -130,7 +130,7 @@ module.exports = {
     newRecord.Quantity = parseFloat(newRecord.Quantity || '1');
     newRecord.ChainId = chainId;
     newRecord.PurchasePrice = parseFloat((newRecord.PurchasePrice + '').replace(/[^\d.-]/g, '') || '0');
-    newRecord.ExternalId = newRecord.ExternalId.replace(/^0+/, '') || '-noid';
+    newRecord.ExternalId = newRecord.ExternalId.replace(/^0+/, '') || '0';
     newRecord.Id = `${newRecord.ExternalId}__${theDate.format('YYYYMMDD')}__${newRecord.UPC}`;
 
     calculateSummary(newRecord);
