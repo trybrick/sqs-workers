@@ -64,11 +64,10 @@ function cleanUp(context) {
   }
 
   log('start cleanUp', config.workDir);
-  var dirToRemove = config.workDir + '/*';
 
   // exec filehose
   return new Promise(function(Y, N) {
-    var cmd = spawn('rm', ['-rf', dirToRemove], {
+    var cmd = spawn('rm', ['-rf', '*'], {
       cwd: config.workDir
     });
     cmd.stdout.on('data', function(data) {
