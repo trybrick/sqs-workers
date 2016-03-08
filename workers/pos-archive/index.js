@@ -57,8 +57,9 @@ function downloadExtract(bucketFrom) {
   });
 }
 
-function cleanUp() {
+function cleanUp(context) {
   if (config.workDir.indexOf('tmp') < 0) {
+    context.done('invalid work dir: ' + config.workDir);
     return;
   }
 
@@ -146,7 +147,7 @@ module.exports = {
       Key: srcKey
     };
 
-    cleanUp()
+    cleanUp(context)
       .then(function() {
         return downloadExtract(bucketFrom);
       })
