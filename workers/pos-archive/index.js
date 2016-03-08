@@ -64,7 +64,7 @@ function cleanUp(context) {
   }
 
   log('start cleanUp', config.workDir);
-  var dirToRemove = config.workDir + '/';
+  var dirToRemove = config.workDir + '/*';
 
   // exec filehose
   return new Promise(function(Y, N) {
