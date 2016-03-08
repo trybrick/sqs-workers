@@ -68,12 +68,14 @@ function cleanUp(context) {
 
   // exec filehose
   return new Promise(function(Y, N) {
-    var unzip = spawn('rm', ['-rf', dirToRemove], {
+    var cmd = spawn('rm', ['-rf', dirToRemove], {
       cwd: config.workDir
     });
-    unzip.stdout.on('data', log);
-    unzip.on('close', Y);
-    unzip.on('error', Y);
+    cmd.stdout.on('data', function(data) {
+      log('' + data);
+    });
+    cmd.on('close', Y);
+    cmd.on('error', Y);
   });
 }
 
@@ -82,14 +84,16 @@ function splitFiles(filePath) {
 
   // exec filehose
   return new Promise(function(Y, N) {
-    var unzip = spawn('filehose', [configFile, filePath], {
+    var cmd = spawn('filehose', [configFile, filePath], {
       cwd: config.workDir
     });
-    unzip.stdout.on('data', log);
-    unzip.on('close', function(code) {
+    cmd.stdout.on('data', function(data) {
+      log('' + data);
+    });
+    cmd.on('close', function(code) {
       code == 0 ? Y(code) : N(code);
     });
-    unzip.on('error', N);
+    cmd.on('error', N);
   });
 }
 
@@ -107,7 +111,9 @@ function syncToS3() {
     var cmd = spawn('aws', ['s3', 'sync', './', destDir], {
       cwd: sourceDir
     });
-    cmd.stdout.on('data', log);
+    cmd.stdout.on('data', function(data) {
+      log('' + data);
+    });
     cmd.on('close', function(code) {
       code == 0 ? Y(code) : N(code);
     });
