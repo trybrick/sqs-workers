@@ -100,7 +100,9 @@ function syncToS3() {
   // execute aws-cli s3 sync
   return new Promise(function(Y, N) {
     var sourceDir = path.join(config.workDir, 'out/');
-    var destDir = 'S3://brick-pos/';
+    var destDir = 's3://brick-pos/';
+
+    log('sourceDir', sourceDir);
 
     var cmd = spawn('aws', ['s3', 'sync', './', destDir], {
       cwd: sourceDir
