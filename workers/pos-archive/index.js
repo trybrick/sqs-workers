@@ -6,6 +6,7 @@ var _ = require('lodash');
 var path = require('path');
 var fs = require('fs');
 var unzip = require('unzip');
+var mkdirp = require('mkdirp');
 
 var configFile = path.join(__dirname, 'archive.config.js');
 var config = require(configFile);
