@@ -12,9 +12,7 @@ var configFile = path.join(__dirname, 'archive.config.js');
 var config = require(configFile);
 var logMessages = [];
 var today = new Date();
-var myDir = path.join(config.workDir, today.getTime() + '');
-mkdirp.sync(myDir);
-config.workDir = myDir;
+var myDir = config.workDir;
 
 var log = function() {
   // do some custom log recording
