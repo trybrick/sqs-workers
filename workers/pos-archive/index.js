@@ -16,7 +16,7 @@ var log = function() {
   // log.call(this, 'My Console!!!');
   var args = Array.prototype.slice.call(arguments);
   console.log.apply(console, args);
-  _.each(arguments, function(k, v) {
+  _.each(arguments, function(v) {
     logMessages.push(v);
   });
 };
