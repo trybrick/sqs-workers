@@ -15,10 +15,10 @@ var log = function() {
   // do some custom log recording
   // log.call(this, 'My Console!!!');
   var args = Array.prototype.slice.call(arguments);
-  _.each(args, function(v) {
+  console.log.apply(console, args);
+  _.each(arguments, function(v) {
     logMessages.push(v);
   });
-  console.log.apply(console, args);
 };
 
 function downloadExtract(bucketFrom) {
@@ -57,7 +57,28 @@ function downloadExtract(bucketFrom) {
   });
 }
 
+function cleanUp() {
+  if (config.workDir.indexOf('tmp') < 0) {
+    return;
+  }
+
+  log('start cleanUp', config.workDir);
+  var dirToRemove = config.workDir + '/*';
+
+  // exec filehose
+  return new Promise(function(Y, N) {
+    var unzip = spawn('rm', ['-rf', dirToRemove], {
+      cwd: config.workDir
+    });
+    unzip.stdout.on('data', log);
+    unzip.on('close', Y);
+    unzip.on('error', Y);
+  });
+}
+
 function splitFiles(filePath) {
+  log('start splitFiles', filePath);
+
   // exec filehose
   return new Promise(function(Y, N) {
     var unzip = spawn('filehose', [configFile, filePath], {
@@ -73,6 +94,8 @@ function splitFiles(filePath) {
 
 
 function syncToS3() {
+  log('start syncToS3');
+
   // execute aws-cli s3 sync
   return new Promise(function(Y, N) {
     var sourceDir = path.join(config.workDir, 'out/');
@@ -123,7 +146,10 @@ module.exports = {
       Key: srcKey
     };
 
-    downloadExtract(bucketFrom)
+    cleanUp()
+      .then(function() {
+        return downloadExtract(bucketFrom);
+      })
       .then(splitFiles)
       .then(syncToS3)
       .then(logResult, logResult);
