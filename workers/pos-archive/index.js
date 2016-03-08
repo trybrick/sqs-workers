@@ -10,6 +10,9 @@ var unzip = require('unzip');
 var configFile = path.join(__dirname, 'archive.config.js');
 var config = require(configFile);
 var logMessages = [];
+var today = new Date();
+var myDir = path.join(config.workDir, tody.getTime() + '');
+mkdirp.sync(myDir);
 
 var log = function() {
   // do some custom log recording
@@ -27,7 +30,7 @@ function downloadExtract(bucketFrom) {
     var chainId = fileParts[2];
     var oldFileName = fileParts[fileParts.length - 1];
     var newName = `${chainId}-${oldFileName}`;
-    var fileName = path.join(config.workDir, newName);
+    var fileName = path.join(myDir, newName);
     var outputFileName = fileName.replace(/(\.zip)+$/gi, '.hif')
     var file = fs.createWriteStream(outputFileName);
     config.logFile = bucketFrom.Key.replace(/(\.zip)+$/gi, '.log');
@@ -58,17 +61,17 @@ function downloadExtract(bucketFrom) {
 }
 
 function cleanUp(context) {
-  if (config.workDir.indexOf('tmp') < 0) {
-    context.done('invalid work dir: ' + config.workDir);
+  if (myDir.indexOf('tmp') < 0) {
+    context.done('invalid work dir: ' + myDir);
     return;
   }
 
-  log('start cleanUp', config.workDir);
+  log('start cleanUp', myDir);
 
   // exec filehose
   return new Promise(function(Y, N) {
-    var cmd = spawn('rm', ['-rf', '*'], {
-      cwd: config.workDir
+    var cmd = spawn('bash', ['-c', 'rm -rf *'], {
+      cwd: myDir
     });
     cmd.stdout.on('data', function(data) {
       log('' + data);
@@ -84,7 +87,7 @@ function splitFiles(filePath) {
   // exec filehose
   return new Promise(function(Y, N) {
     var cmd = spawn('filehose', [configFile, filePath], {
-      cwd: config.workDir
+      cwd: myDir
     });
     cmd.stdout.on('data', function(data) {
       log('' + data);
@@ -102,7 +105,7 @@ function syncToS3() {
 
   // execute aws-cli s3 sync
   return new Promise(function(Y, N) {
-    var sourceDir = path.join(config.workDir, 'out/');
+    var sourceDir = path.join(myDir, 'out/');
     var destDir = 's3://brick-pos/';
 
     log('sourceDir', sourceDir);
