@@ -12,4 +12,5 @@ var argv = yargs
 
 var queueId = argv._[0];
 var workerFile = argv._[1];
-main(queueId, workerFile);
+var messageLimit = argv._[3];
+main(queueId, workerFile, messageLimit);

@@ -9,6 +9,7 @@ var AWS = require('aws-sdk');
 config.startTime = new Date();
 config.isRunning = false;
 config.messageCount = 0;
+config.messageLimit = 100;
 
 var currentCallback = null;
 
@@ -18,12 +19,26 @@ AWS.config.update({
   secretAccessKey: config.AWS_SECRET_ACCESS_KEY
 });
 
-module.exports = function(queueId, workerFile) {
+function limitCheck() {
+  if (config.messageCount > config.messageLimit) {
+    console.log('message limit reached...')
+    app.stop();
+    process.exit(0);
+  }
+}
+
+module.exports = function(queueId, workerFile, messageLimit) {
+  config.messageLimit = parseInt(messageLimit || '100') || 100;
   queueId = queueId.replace(/^\/+|\/+$/gi, '');
   var app = Consumer.create({
     queueUrl: `${config.QueuePrefix}/${queueId}`,
     visibilityTimeout: 60,
     handleMessage: function(message, done) {
+      if (config.messageCount > config.messageLimit) {
+        done('message limit reached');
+        return;
+      }
+
       config.messageCount++;
       config.lastActionTime = new Date();
       config.isRunning = true;
@@ -40,17 +55,19 @@ module.exports = function(queueId, workerFile) {
           done(err);
         },
         config: config
-      })
+      });
     }
   });
 
   app.on('error', function(err) {
     console.log('queue err: ' + err);
     config.isRunning = false;
+    limitCheck();
   });
 
   app.on('message_processed', function(message) {
     config.isRunning = false;
+    limitCheck();
   });
 
   var idleLimit = (config.IdleTime || 15) * 1000;
