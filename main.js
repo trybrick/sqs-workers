@@ -20,6 +20,10 @@ AWS.config.update({
 });
 
 function limitCheck() {
+  if (config.isRunning) {
+    return;
+  }
+
   if (config.messageCount > config.messageLimit) {
     console.log('message limit reached...')
     app.stop();
@@ -34,11 +38,7 @@ module.exports = function(queueId, workerFile, messageLimit) {
     queueUrl: `${config.QueuePrefix}/${queueId}`,
     visibilityTimeout: 60,
     handleMessage: function(message, done) {
-      if (config.messageCount > config.messageLimit) {
-        done('message limit reached');
-        return;
-      }
-
+      limitCheck();
       config.messageCount++;
       config.lastActionTime = new Date();
       config.isRunning = true;
@@ -60,6 +60,13 @@ module.exports = function(queueId, workerFile, messageLimit) {
   });
 
   app.on('error', function(err) {
+    console.log('queue err: ' + err);
+    config.isRunning = false;
+    app.stop();
+    process.exit(1);
+  });
+
+  app.on('processing_error', function(err) {
     console.log('queue err: ' + err);
     config.isRunning = false;
     limitCheck();
