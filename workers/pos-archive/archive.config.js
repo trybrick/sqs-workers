@@ -118,8 +118,9 @@ module.exports = {
     var fileParts = fileName.split('-');
     var chainId = fileParts[0];
     var schemaIdx = input.schema[chainId];
-    logId = fileParts[1];
-
+    if (fileParts[1]) {
+      logId = fileParts[1];
+    }
     var newRecord = {};
     _.each(schemaIdx, function(k, v) {
       newRecord[k] = row[v];
