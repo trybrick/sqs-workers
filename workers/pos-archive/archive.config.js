@@ -5,10 +5,11 @@ var mkdirp = require('mkdirp');
 var fs = require('fs');
 var os = require('os');
 
-//var workDir = path.join(os.tmpdir(), 'pos-archive');
+// var workDir = path.join(os.tmpdir(), 'pos-archive');
 var workDir = '/tmp/pos-archive';
 mkdirp.sync(workDir);
 
+// input file schema
 var input = {
   options: {
     delimiter: '|',
@@ -25,6 +26,7 @@ var input = {
   }
 };
 
+// output schema
 var output = {
   options: {
     delimiter: ',',
@@ -44,7 +46,14 @@ var output = {
   ]
 };
 
+var startTime = new Date();
+var logId = startTime.getTime();
 var allSummary = {};
+
+/**
+ * summarize data
+ * @param  {[type]} row the data row
+ */
 function calculateSummary(row) {
   var allSum = allSummary[row.PurchaseDate];
   if (!allSum) {
@@ -93,9 +102,6 @@ function calculateSummary(row) {
   storeSum.quantity += parseFloat(row.Quantity);
   storeSum.sum += parseFloat(row.Quantity) * parseFloat(row.PurchasePrice);
 }
-
-var startTime = new Date();
-var logId = startTime.getTime();
 
 module.exports = {
   workDir: workDir,
