@@ -95,6 +95,7 @@ function calculateSummary(row) {
 }
 
 var startTime = new Date();
+var logId = startTime.getTime();
 
 module.exports = {
   workDir: workDir,
@@ -140,13 +141,13 @@ module.exports = {
     var rst = [];
     var basePath = `${workDir}/out/${row.ChainId}/`;
     var prefix = row.ExternalId;
-    var path1 = `${basePath}/loyalty/${prefix}/${row.PurchaseDate}.csv`;
-    var path2 = `${basePath}/upc/${row.UPC}/${row.PurchaseDate}.csv`;
-    var path3 = `${basePath}/store/${row.StoreNumber}/${row.PurchaseDate}.csv`;
+    var path1 = `${basePath}/loyalty/${prefix}/${row.PurchaseDate}_${logId}.csv`;
+    var path2 = `${basePath}/upc/${row.UPC}/${row.PurchaseDate}_${logId}.csv`;
+    var path3 = `${basePath}/store/${row.StoreNumber}/${row.PurchaseDate}_${logId}.csv`;
     rst.push(path1);
     rst.push(path2);
     rst.push(path3);
-    rst.push(path.join(basePath, `_all/${row.PurchaseDate}.csv`));
+    rst.push(path.join(basePath, `_all/${row.PurchaseDate}_${logId}.csv`));
     return rst;
   },
   batchEnd: function(rows) {
@@ -166,10 +167,9 @@ module.exports = {
       var basePath = `${workDir}/out/${v.all.ChainId}/_summary/`;
       mkdirp.sync(basePath);
 
-      var file = path.join(basePath, `${k}_${payload.endTime}.json`);
+      var file = path.join(basePath, `${k}_${logId}.json`);
       var data = _.merge({}, payload, v);
       var outData = JSON.stringify(data, null, 2);
-      console.log(outData);
       fs.writeFileSync(file, outData);
     });
     process.exit(0);
