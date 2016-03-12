@@ -110,7 +110,7 @@ function syncToS3() {
 
     log('sourceDir', sourceDir);
 
-    var cmd = spawn('aws', ['s3', 'sync', './', destDir], {
+    var cmd = spawn('aws', ['s3', 'cp', './', destDir, '--recursive'], {
       cwd: sourceDir
     });
     cmd.stdout.on('data', function(data) {
