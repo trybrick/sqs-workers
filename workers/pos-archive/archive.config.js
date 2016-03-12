@@ -118,7 +118,7 @@ module.exports = {
     var fileParts = fileName.split('-');
     var chainId = fileParts[0];
     var schemaIdx = input.schema[chainId];
-    logId = fileNameNoExtension;
+    logId = fileParts[1];
 
     var newRecord = {};
     _.each(schemaIdx, function(k, v) {
