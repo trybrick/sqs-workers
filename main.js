@@ -38,6 +38,7 @@ module.exports = function(queueId, workerFile, messageLimit) {
     queueUrl: `${config.QueuePrefix}/${queueId}`,
     visibilityTimeout: 60,
     handleMessage: function(message, done) {
+      config.isRunning = false;
       limitCheck();
       config.messageCount++;
       config.lastActionTime = new Date();
