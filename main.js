@@ -19,13 +19,17 @@ AWS.config.update({
   secretAccessKey: config.AWS_SECRET_ACCESS_KEY
 });
 
-function limitCheck() {
+function limitCheck(cb) {
   if (config.isRunning) {
     return;
   }
 
   if (config.messageCount > config.messageLimit) {
-    console.log('message limit reached...')
+    console.log('message limit reached...');
+    if (cb) {
+      cb('limit reached...');
+    }
+
     app.stop();
     process.exit(0);
   }
@@ -39,7 +43,7 @@ module.exports = function(queueId, workerFile, messageLimit) {
     visibilityTimeout: 60,
     handleMessage: function(message, done) {
       config.isRunning = false;
-      limitCheck();
+      limitCheck(done);
       config.messageCount++;
       config.lastActionTime = new Date();
       config.isRunning = true;
