@@ -115,7 +115,7 @@ module.exports = {
 
     var fileName = path.basename(fullPath);
     var fileNameNoExtension = fileName.replace('.hif', '');
-    var fileParts = fileName.split('-');
+    var fileParts = fileNameNoExtension.split('-');
     var chainId = fileParts[0];
     var schemaIdx = input.schema[chainId];
     if (fileParts[1]) {
