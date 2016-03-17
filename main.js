@@ -19,22 +19,6 @@ AWS.config.update({
   secretAccessKey: config.AWS_SECRET_ACCESS_KEY
 });
 
-function limitCheck(cb) {
-  if (config.isRunning) {
-    return;
-  }
-
-  if (config.messageCount > config.messageLimit) {
-    console.log('message limit reached...');
-    if (cb) {
-      cb('limit reached...');
-    }
-
-    app.stop();
-    process.exit(0);
-  }
-}
-
 module.exports = function(queueId, workerFile, messageLimit) {
   config.messageLimit = parseInt(messageLimit || '100') || 100;
   queueId = queueId.replace(/^\/+|\/+$/gi, '');
@@ -65,6 +49,7 @@ module.exports = function(queueId, workerFile, messageLimit) {
     }
   });
 
+
   app.on('error', function(err) {
     console.log('queue err: ' + err);
     config.isRunning = false;
@@ -84,6 +69,22 @@ module.exports = function(queueId, workerFile, messageLimit) {
   });
 
   var idleLimit = (config.IdleTime || 15) * 1000;
+
+  function limitCheck(cb) {
+    if (config.isRunning) {
+      return;
+    }
+
+    if (config.messageCount > config.messageLimit) {
+      console.log('message limit reached...');
+      if (cb) {
+        cb('limit reached...');
+      }
+
+      app.stop();
+      process.exit(0);
+    }
+  }
 
   function handleIdle() {
     var currentTime = new Date();
