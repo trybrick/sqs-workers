@@ -56,6 +56,7 @@ module.exports = function(queueId, workerFile, messageLimit) {
 
       require(workerFile).handler(msg, {
         done: function(err) {
+          config.isRunning = false;
           config.lastActionTime = new Date();
           done(err);
         },

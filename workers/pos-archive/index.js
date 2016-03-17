@@ -135,6 +135,7 @@ function logResult(err) {
     Body: JSON.stringify(logMessages, null, 2),
     ContentType: 'application/json'
   }, function() {
+    log('log uploaded...');
     setTimeout(config.context.done, 1000);
   });
 }
@@ -142,7 +143,6 @@ function logResult(err) {
 // this is not a long running job and it should be on AWS Lambda
 // we have it here as an example of a sqs-workers job
 module.exports = {
-  limit: 2,
   handler: function(event, context) {
     log('processing', JSON.stringify(event, null, 2));
     config.context = context;
