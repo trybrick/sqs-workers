@@ -127,6 +127,7 @@ function logResult(err) {
   if (err) {
     log('error', err);
   }
+  log('uploading process log...');
 
   // write to s3
   s3.putObject({
@@ -135,7 +136,7 @@ function logResult(err) {
     Body: JSON.stringify(logMessages, null, 2),
     ContentType: 'application/json'
   }, function() {
-    log('log uploaded...');
+    log('process log uploaded...');
     setTimeout(config.context.done, 1000);
   });
 }
