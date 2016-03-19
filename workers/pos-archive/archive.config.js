@@ -142,6 +142,11 @@ module.exports = {
     newRecord.ExternalId = newRecord.ExternalId.replace(/^0+/, '') || '0';
     newRecord.Id = `${newRecord.ExternalId}__${theDate.format('YYYYMMDD')}__${newRecord.UPC}`;
 
+    // if both are negative, must convert one to positive
+    if (newRecord.Quantity < 0 && newRecord.PurchasePrice < 0) {
+      newRecord.Quantity = -1 * newRecord.Quantity;
+    }
+
     calculateSummary(newRecord);
     return newRecord;
   },
