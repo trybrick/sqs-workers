@@ -1,5 +1,5 @@
 require('dotenv').load();
-config = require './config'
+config = require '../config'
 
 AWS = require 'aws-sdk'
 
