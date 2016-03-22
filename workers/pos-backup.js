@@ -38,7 +38,7 @@ _.each(files, function(v, k) {
   var filename = path.basename(v);
   var fileParts = filename.split('-');
   var chainId = fileParts[0];
-  var destName = fullPath.replace('.hif', '_HIFX.ZIP');
+  var destName = fullPath.replace('.hif', '_hif.zip');
   if (fileExists(destName + '.DONE')) {
     return;
   }
