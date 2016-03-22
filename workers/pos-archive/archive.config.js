@@ -180,7 +180,7 @@ module.exports = {
       var basePath = `${workDir}/out/${v.all.ChainId}/_summary/`;
       mkdirp.sync(basePath);
 
-      var file = path.join(basePath, `${k}_${logId}.json`);
+      var file = path.join(basePath, `${k}.json`);
       var data = _.merge({}, payload, v);
       var outData = JSON.stringify(data, null, 2);
       fs.writeFileSync(file, outData);

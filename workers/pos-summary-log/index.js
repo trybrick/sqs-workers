@@ -50,11 +50,11 @@ function uploadAzure(payload) {
     //delete payload['RowKey'];
     //delete payload['PartitionKey'];
 
-    console.log(JSON.stringify(opts, null, 2));
+    //console.log(JSON.stringify(opts, null, 2));
 
     request(opts
       , (error, raw, response) => {
-        console.log(error, 'response', response);
+        // console.log(error, 'response', response);
         if (error) {
           reject(error);
         } else {
@@ -92,6 +92,8 @@ module.exports = {
       var purchaseDate = fileName.substr(0, 10);
       var rst = JSON.parse(data.Body);
       var summary = {
+        PurchaseDate: purchaseDate,
+        ChainId: chainId,
         BasketItemCount: 0,
         BasketItemQuantity: 0,
         BasketCount: 0,
