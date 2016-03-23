@@ -42,6 +42,7 @@ _.each(files, function(v, k) {
   if (fileExists(destName + '.DONE')) {
     return;
   }
+  console.log('compressing', destName);
 
   var today = moment(new Date());
   var datePath = today.format("YYYYMMDD");
@@ -49,9 +50,10 @@ _.each(files, function(v, k) {
   zip.addLocalFile(fullPath, filename);
   zip.writeZip(destName);
   var namePath = path.basename(destName);
+  var realName = namePath.replace(chainId + '-', '').replace(/\-/gi, '_');
 
   toUpload.push({
-    destPath: `archive/${datePath}/${chainId}/${namePath}`,
+    destPath: `archive/${datePath}/${chainId}/${realName}`,
     localPath: destName
   });
 });
