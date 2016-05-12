@@ -13,9 +13,6 @@ var banners = {
 var i = 0;
 
 function statlog(data, cb) {
-  var val = encodeURIComponent(v / 1000);
-  var key = encodeURIComponent(k);
-  var dt = encodeURIComponent(t);
   var path = `/ez`;
 
   var payload = {
