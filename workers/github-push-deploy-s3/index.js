@@ -8,7 +8,6 @@ var Promise = require('bluebird');
 var request = require('request');
 var crypto = require('crypto');
 var config = require('../../config');
-var liftAnalysis = require('./lift-analysis');
 
 var azureKeys = config.AZURE_STORAGE_STRING.split(':');
 var accountName = azureKeys[0];
@@ -131,24 +130,10 @@ module.exports = {
       });
 
       summary.StoreData = JSON.stringify(storeData);
-      var next = function() {
-        liftAnalysis
-          .logSummary(rst, summary)
-          .then(function(rsp) {
-            // write to s3 for UPC lift analysis
-            s3.putObject({
-              Bucket: config.bucketFrom.Bucket,
-              Key: srcKey.replace('.json', '.upcs'),
-              Body: JSON.stringify(rsp, null, 2),
-              ContentType: 'application/json'
-            }, context.done);
-          }, context.done);
-      };
 
       // post to remote
       // console.log(JSON.stringify(summary, null, 2));
-      uploadAzure(summary)
-        .then(next, next);
+      uploadAzure(summary).then(context.done, context.done);
     });
   }
 };
