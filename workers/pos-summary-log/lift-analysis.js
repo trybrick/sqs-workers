@@ -46,14 +46,7 @@ function statlog(data, cb) {
     //the whole response has been recieved, so we just print it out here
     response.on('end', function() {
       console.log('server:', str);
-      var timeout = 500;
-      if (data.Entities.length % 9 == 0) {
-        timeout = 15000;
-      }
-
-      setTimeout(function() {
-        cb();
-      }, timeout);
+      cb();
     });
   }
 
