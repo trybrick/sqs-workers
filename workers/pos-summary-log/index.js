@@ -137,7 +137,7 @@ module.exports = {
           .then(function(rsp) {
             // write to s3 for UPC lift analysis
             s3.putObject({
-              Bucket: config.bucketFrom.Bucket,
+              Bucket: srcBucket,
               Key: srcKey.replace('.json', '.upcs'),
               Body: JSON.stringify(rsp, null, 2),
               ContentType: 'application/json'
