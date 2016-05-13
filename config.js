@@ -12,6 +12,7 @@ module.exports = {
   "FTP_CONNECTION_STRING": env.FTP_CONNECTION_STRING,
   "FTP_API_KEY": env.FTP_API_KEY,
   "AZURE_STORAGE_STRING": env.AZURE_STORAGE_STRING,
+  "STAT_KEY": env.STAT_KEY,
   "IsTest": env.NODE_ENV === 'development',
   "QueuePrefix": "https://sqs.us-west-2.amazonaws.com",
   "IdleTime": 15
