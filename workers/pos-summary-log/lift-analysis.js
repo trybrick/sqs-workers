@@ -47,7 +47,9 @@ function statlog(data, cb) {
     });
   }
 
-  http.request(options, callback).end();
+  var post_req = http.request(options, callback);
+  post_req.write(post_data);
+  post_req.end();
 }
 
 function logStat(data) {
