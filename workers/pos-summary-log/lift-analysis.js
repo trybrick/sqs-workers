@@ -101,7 +101,7 @@ module.exports = {
 
     _.each(rst.store, function(v, k) {
       allData.push({
-        "stat": `${sum.ChainId}-storenbr${k}-sales-total-in-1000s-${banner}`,
+        "stat": `${sum.ChainId}-storenbr-${k}-sales-total-in-1000s-${banner}`,
         "value": v.sum,
         "t": pDate.getTime() + (60 * 60 * 1000)
       });
