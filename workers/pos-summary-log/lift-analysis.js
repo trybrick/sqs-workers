@@ -93,7 +93,7 @@ module.exports = {
     var pDate = new Date(sum.PurchaseDate);
 
     // add 1 hour and get time in seconds
-    var t = (pDate.getTime() + 360000) / 1000;
+    var t = Math.floor((pDate.getTime() + 360000) / 1000);
 
     // push chain
     allData.push({
