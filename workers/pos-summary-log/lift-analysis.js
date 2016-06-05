@@ -98,14 +98,14 @@ module.exports = {
     // push chain
     allData.push({
       "stat": key,
-      "value": sum.SaleSum,
+      "value": sum.SaleSum / 1000,
       "t": t
     });
 
     _.each(rst.store, function(v, k) {
       allData.push({
         "stat": `c${sum.ChainId}-sales-in-1k-${banner}-storenbr-${k}`,
-        "value": v.sum,
+        "value": v.sum / 1000,
         "t": t
       });
     });
