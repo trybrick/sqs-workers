@@ -92,8 +92,11 @@ module.exports = {
     var key = `c${sum.ChainId}-sales-in-1k-${banner}`;
     var pDate = new Date(sum.PurchaseDate);
 
-    // add 1 hour and get time in seconds
-    var t = Math.floor((pDate.getTime() + 360000) / 1000);
+    // log purchase date
+    console.log(pDate);
+
+    // add 8 hours to make sure it's on the right day
+    var t = Math.floor((pDate.getTime() + 8 * 3600000) / 1000);
 
     // push chain
     allData.push({
