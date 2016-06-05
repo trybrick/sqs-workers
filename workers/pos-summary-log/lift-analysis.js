@@ -92,10 +92,8 @@ module.exports = {
     var key = `${sum.ChainId}-sales-total-in-1k-${banner}`;
     var pDate = new Date(sum.PurchaseDate);
 
-    // if 12 AM is 9 AM stat server time for the next day
-    // then send in the data one day earlier
-    pDate.setDate(pDate.getDate() - 1);
-    var t = pDate.getTime();
+    // add 1 hour and get time in seconds
+    var t = (pDate.getTime() + 360000) / 1000;
 
     // push chain
     allData.push({
