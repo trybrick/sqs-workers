@@ -94,7 +94,8 @@ module.exports = {
 
     // if 12 AM is 9 AM stat server time for the next day
     // then send in the data one day earlier
-    var t = pDate.setDate(pDate.getDate() - 1).getTime();
+    pDate.setDate(pDate.getDate() - 1);
+    var t = pDate.getTime();
 
     // push chain
     allData.push({
