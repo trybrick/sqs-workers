@@ -99,7 +99,7 @@ module.exports = {
     console.log(sum.PurchaseDate, pDate);
 
     // add 8 hours to make sure it's on the right day
-    var t = Math.floor((pDate.getTime() + 8 * 3600000) / 1000);
+    var t = Math.floor((pDate.getTime() + 10 * 3600000) / 1000);
 
     // push chain
     allData.push({
