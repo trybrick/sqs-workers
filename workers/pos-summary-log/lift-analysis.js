@@ -91,7 +91,7 @@ module.exports = {
   logSummary: function(rst, sum) {
     var allData = [];
     var banner = banners[sum.ChainId];
-    var key = `c${sum.ChainId}-sales-in-1k-${banner}`;
+    var key = `c${sum.ChainId}-sales-1k-${banner}`;
     var d = moment(sum.PurchaseDate, 'YYYY-MM-DD');
     var pDate = d.toDate();
 
@@ -110,7 +110,7 @@ module.exports = {
 
     _.each(rst.store, function(v, k) {
       allData.push({
-        "stat": `c${sum.ChainId}-sales-in-1k-${banner}-storenbr-${k}`,
+        "stat": `c${sum.ChainId}-sales-1k-${banner}-storenbr-${k}`,
         "value": v.sum / 1000,
         "t": t
       });
