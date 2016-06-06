@@ -68,7 +68,7 @@ module.exports = {
     );
 
     console.log(srcKey);
-    var destFile = config.destPath + srcKey.substr(17).replace(/(\/\/|\\\\)+/gi, '\\');
+    var destFile = config.destPath + srcKey.substr(22).replace(/(\/\/|\\\\)+/gi, '\\');
 
     var bucketFrom = {
       Bucket: srcBucket,
