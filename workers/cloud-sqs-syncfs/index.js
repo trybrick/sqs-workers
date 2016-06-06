@@ -11,10 +11,11 @@ var fs = require('fs');
 var mkdirp = require('mkdirp');
 
 var config = {
-  destPath: '\\\\172.25.46.154\\CloudFiles\\'
+  destPath: '\\\\172.25.46.154\\CloudFiles\\tmp\\'
 }
 var logMessages = [];
 var today = new Date();
+var destFile = '';
 
 var log = function() {
   // do some custom log recording
@@ -26,14 +27,29 @@ var log = function() {
   });
 };
 
-function download(bucketFrom, destFile) {
+function download(bucketFrom) {
   return new Promise(function(resolve, reject) {
   	log(destFile);
+    var destFile2 = .replace('\\tmp\\', '\\data\\');
+
+    // make dest folder
     var destDir = path.dirname(destFile);
     mkdirp.sync(destDir);
 
+    // make data folder
+    mkdirp.sync(path.dirname(destFile2));
+
+    // set a temp file name
     var file = fs.createWriteStream(destFile);
-    file.on('close', resolve);
+    file.on('close', function() {
+      fs.rename(destFile, destFile2, function(err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      })
+    });
     s3.getObject(bucketFrom) // Unzip stream
       .createReadStream()
       .pipe(file)
@@ -68,16 +84,17 @@ module.exports = {
     );
     var fileParts = srcKey.split('/').slice(3);
     var newKey = fileParts.join('\\')
+    var fileName = path.basename(newKey);
 
     console.log(srcKey);
-    var destFile = config.destPath + newKey;
+    destFile = config.destPath + newKey;
 
     var bucketFrom = {
       Bucket: srcBucket,
       Key: srcKey
     };
 
-    download(bucketFrom, destFile)
+    download(bucketFrom)
       .then(logResult, logResult);
   }
 };
