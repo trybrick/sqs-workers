@@ -35,6 +35,7 @@ function download(bucketFrom, destFile) {
     var file = fs.createWriteStream(destFile);
     file.on('close', resolve);
     s3.getObject(bucketFrom) // Unzip stream
+      .createReadStream()
       .pipe(file)
 
       // Callback with error
