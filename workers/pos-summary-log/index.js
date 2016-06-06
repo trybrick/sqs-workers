@@ -1,5 +1,6 @@
-/**
- * log pos summary to azure.
+/*
+  Summary:
+    s3 -> sqs -> worker: azure and stathat
  */
 var AWS = require('aws-sdk');
 var _ = require('lodash');

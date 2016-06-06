@@ -1,3 +1,7 @@
+###*
+ * Summary:
+ *   Special helper to purge file matching particular pattern from s3.
+###
 require('dotenv').load();
 config = require '../config'
 

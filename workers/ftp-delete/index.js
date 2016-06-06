@@ -1,3 +1,7 @@
+/*
+  Summary: 
+    ftp -> s3 -> sqs -> worker: delete from ftp
+ */
 var async = require('async');
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3();

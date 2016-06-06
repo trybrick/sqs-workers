@@ -1,3 +1,7 @@
+/*
+  Summary:
+    s3 -> sqs -> worker: filehose split files, calculate total -> s3
+ */
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
 var Promise = require('bluebird');
