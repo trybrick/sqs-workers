@@ -30,7 +30,7 @@ var log = function() {
 function download(bucketFrom) {
   return new Promise(function(resolve, reject) {
   	log(destFile);
-    var destFile2 = .replace('\\tmp\\', '\\data\\');
+    var destFile2 = destFile.replace('\\tmp\\', '\\data\\');
 
     // make dest folder
     var destDir = path.dirname(destFile);
