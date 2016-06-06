@@ -90,10 +90,11 @@ module.exports = {
     var allData = [];
     var banner = banners[sum.ChainId];
     var key = `c${sum.ChainId}-sales-in-1k-${banner}`;
-    var pDate = new Date(sum.PurchaseDate);
+    var d = moment(sum.PurchaseDate, 'YYYY-MM-DD');
+    var pDate = d.toDate();
 
     // log purchase date
-    console.log(pDate);
+    console.log(sum.PurchaseDate, pDate);
 
     // add 8 hours to make sure it's on the right day
     var t = Math.floor((pDate.getTime() + 8 * 3600000) / 1000);
