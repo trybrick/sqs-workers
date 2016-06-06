@@ -3,6 +3,7 @@ var _ = require('lodash');
 var Promise = require('bluebird');
 var config = require('../../config');
 var statKey = config.STAT_KEY;
+var moment = require('moment');
 
 var banners = {
   215: 'picknsave',
