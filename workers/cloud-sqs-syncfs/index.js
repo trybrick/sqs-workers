@@ -66,9 +66,11 @@ module.exports = {
     var srcKey = decodeURIComponent(
       record.object.key.replace(/\+/g, ' ')
     );
+    var fileParts = srcKey.split('/').slice(3);
+    var newKey = fileParts.join('\\')
 
     console.log(srcKey);
-    var destFile = config.destPath + srcKey.substr(21).replace(/(\/\/|\\\\)+/gi, '\\');
+    var destFile = config.destPath + newKey;
 
     var bucketFrom = {
       Bucket: srcBucket,
