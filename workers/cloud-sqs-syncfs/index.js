@@ -9,7 +9,8 @@ var _ = require('lodash');
 var path = require('path');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
-var helper = require('../helper.js')
+var helper = require('../helper.js');
+var ftpDel = require('../ftp-del.js');
 
 var config = {
   destPath: '\\\\172.25.46.154\\CloudFiles\\tmp\\'
@@ -71,8 +72,11 @@ function logResult(err) {
   if (err) {
     log('error', err);
   }
-  log('uploading process log...');
+  log('try to remove file');
 
+  // ftpDel.handler(myPath, config.context.done);
+  
+  // comment out the line below if using ftpDel
   setTimeout(config.context.done, 1000);
 }
 
