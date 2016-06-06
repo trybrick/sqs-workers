@@ -9,6 +9,7 @@ var _ = require('lodash');
 var path = require('path');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
+var helper = require('../helper.js')
 
 var config = {
   destPath: '\\\\172.25.46.154\\CloudFiles\\tmp\\'
@@ -31,6 +32,12 @@ function download(bucketFrom) {
   return new Promise(function(resolve, reject) {
   	log(destFile);
     var destFile2 = destFile.replace('\\tmp\\', '\\data\\');
+    if (helper.exists(destFile)) {
+      fs.unlinkSync(destFile);
+    }
+    if (helper.exists(destFile2)) {
+      fs.unlinkSync(destFile2);
+    }
 
     // make dest folder
     var destDir = path.dirname(destFile);
@@ -38,6 +45,7 @@ function download(bucketFrom) {
 
     // make data folder
     mkdirp.sync(path.dirname(destFile2));
+
 
     // set a temp file name
     var file = fs.createWriteStream(destFile);
@@ -87,7 +95,7 @@ module.exports = {
     var fileName = path.basename(newKey);
 
     console.log(srcKey);
-    destFile = config.destPath + newKey;
+    destFile = config.destPath + fileName;
 
     var bucketFrom = {
       Bucket: srcBucket,
