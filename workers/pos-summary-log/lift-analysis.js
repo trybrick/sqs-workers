@@ -20,6 +20,7 @@ function statlog(data, cb) {
     "data": data
   };
   var post_data = JSON.stringify(payload);
+  console.log(JSON.stringify(payload, null, 2))
 
   var options = {
     host: 'api.stathat.com',
