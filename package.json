@@ -4,7 +4,6 @@
   "version": "0.0.1",
   "dependencies": {
     "Buffer": "^0.0.0",
-    "adm-zip": "^0.4.7",
     "async": "^1.5.2",
     "aws-sdk": "^2.2.34",
     "azure-storage-simple": "^0.6.0",
@@ -21,5 +20,8 @@
     "sqs-consumer": "^3.1.2",
     "unzip": "^0.1.11",
     "yargs": "^4.2.0"
+  },
+  "devDependencies": {
+    "mkdirp": "^0.5.1"
   }
 }
