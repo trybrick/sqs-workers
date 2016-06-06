@@ -11,7 +11,7 @@ var fs = require('fs');
 var mkdirp = require('mkdirp');
 
 var config = {
-  destPath: '\\\\172.25.46.154\\CloudFiles'
+  destPath: '\\\\172.25.46.154\\CloudFiles\\'
 }
 var logMessages = [];
 var today = new Date();
@@ -66,14 +66,12 @@ module.exports = {
     var srcKey = decodeURIComponent(
       record.object.key.replace(/\+/g, ' ')
     );
-    var today = new Date();
-    var segment = srcKey.indexOf('/' + today.getYear());
-    var destFile = config.destPath + '/';
-    if (segment > 0) {
-    	destFile += srcKey.substr(segment + 11);
-    }
 
-    destFile = destFile.replace(/(\/\/|\\\\)+/gi, '\/');
+    console.log(srcKey);
+    var destFile = config.destPath;
+    if (segment > 0) {
+    	destFile = destFile + srcKey.substr(17).replace(/(\/\/|\\\\)+/gi, '\\');
+    }
 
     var bucketFrom = {
       Bucket: srcBucket,
