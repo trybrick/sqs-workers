@@ -17,6 +17,7 @@ var config = require(configFile);
 var logMessages = [];
 var today = new Date();
 var myDir = config.workDir;
+var ftpDel = require('../ftp-del.js');
 
 var log = function() {
   // do some custom log recording
@@ -165,12 +166,18 @@ module.exports = {
       Key: srcKey
     };
 
-    cleanUp(context)
+    var fileParts = srcKey.split('/');
+    var goodParts = fileParts.slice(3);
+    var myPath = goodParts.join('/');
+
+    ftpDel.handler(myPath, function() {
+      cleanUp(context)
       .then(function() {
         return downloadExtract(bucketFrom);
       })
       .then(splitFiles)
       .then(syncToS3)
       .then(logResult, logResult);
+    });
   }
 };
