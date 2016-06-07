@@ -11,13 +11,13 @@ var path = require('path');
 var fs = require('fs');
 var unzip = require('unzip');
 var mkdirp = require('mkdirp');
+var ftpDel = require('../ftp-del.js');
 
 var configFile = path.join(__dirname, 'archive.config.js');
 var config = require(configFile);
 var logMessages = [];
 var today = new Date();
 var myDir = config.workDir;
-var ftpDel = require('../ftp-del.js');
 
 var log = function() {
   // do some custom log recording
