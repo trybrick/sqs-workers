@@ -18,6 +18,7 @@ var config = {
 var logMessages = [];
 var today = new Date();
 var destFile = '';
+var myPath = '';
 
 var log = function() {
   // do some custom log recording
@@ -95,7 +96,8 @@ module.exports = {
       record.object.key.replace(/\+/g, ' ')
     );
     var fileParts = srcKey.split('/').slice(3);
-    var newKey = fileParts.join('\\')
+    var newKey = fileParts.join('\\');
+    myPath = fileParts.join('/');
     var fileName = path.basename(newKey);
 
     console.log(srcKey);
