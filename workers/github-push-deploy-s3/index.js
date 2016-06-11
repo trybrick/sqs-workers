@@ -25,11 +25,9 @@ function doDownload() {
 
     // execute aws-cli s3 sync
     return new Promise(function(Y, N) {
-        var data = config.data;
-        var ref = data.ref.replace('refs/heads/', '');
-        config.ref = ref;
         mkdirp.sync(myDir);
-
+        var data = config.data;
+        var ref = config.ref;
         var downloadUrl = `${data.repository.url}/archive/${ref}.tar.gz`;
         var cmd = spawn('curl', ['-Lk', '-o', `${myDir}/result.tar.gz`, downloadUrl], {
             cwd: myDir
@@ -154,10 +152,18 @@ module.exports = {
 
         var ghevent = (event.MessageAttributes['X-Github-Event']['Value'] + '').toLowerCase() || 'unknown';
         if (ghevent !== 'push') {
-            context.fail('This service only handle push event.');
+            logResult('This service only handle push event.');
             return;
         }
-        config.data = JSON.parse(event.Message);;
+
+        config.data = JSON.parse(event.Message);
+        var ref = config.data.ref.replace('refs/heads/', '');
+        config.ref = ref;
+
+        if (0 > ['master', 'production'].indexOf(ref)) {
+            logResult('This service only handle master/production branch.');
+            return;
+        }
 
         cleanUp()
             .then(doDownload)
