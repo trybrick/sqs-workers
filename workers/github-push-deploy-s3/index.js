@@ -70,8 +70,8 @@ function cleanUp() {
 
     // exec filehose
     return new Promise(function(Y, N) {
-        var cmd = spawn('bash', ['-c', 'rm -rf', myDir], {
-            cwd: '/tmp'
+        var cmd = spawn('bash', ['-c', 'rm -rf *'], {
+            cwd: myDir
         });
         cmd.stdout.on('data', function(data) {
             log('' + data);
