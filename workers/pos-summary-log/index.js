@@ -135,15 +135,7 @@ module.exports = {
       var next = function() {
         liftAnalysis
           .logSummary(rst, summary)
-          .then(function(rsp) {
-            // write to s3 for UPC lift analysis
-            s3.putObject({
-              Bucket: srcBucket,
-              Key: srcKey.replace('.json', '.upcs'),
-              Body: JSON.stringify(rsp, null, 2),
-              ContentType: 'application/json'
-            }, context.done);
-          }, context.done);
+          .then(context.done, context.done);
       };
 
       // post to remote

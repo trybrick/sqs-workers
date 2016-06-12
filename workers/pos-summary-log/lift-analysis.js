@@ -60,33 +60,6 @@ function logStat(data) {
   });
 }
 
-function getUPCs(chainId) {
-  return new Promise((resolve, reject) => {
-    var options = {
-      host: 'brick.webscript.io',
-      path: `/liftanalysis/getupcs?siteid=${chainId}`
-    };
-
-    var callback = function(response) {
-      var str = '';
-      response.setEncoding('utf8');
-
-      //another chunk of data has been recieved, so append it to `str`
-      response.on('data', function(chunk) {
-        str += chunk;
-      });
-
-      //the whole response has been recieved, so we just print it out here
-      response.on('end', function() {
-        console.log('server:', str);
-        resolve(str);
-      });
-    }
-
-    http.request(options, callback).end();
-  });
-}
-
 module.exports = {
   logSummary: function(rst, sum) {
     var allData = [];
@@ -116,9 +89,6 @@ module.exports = {
       });
     });
 
-    return logStat(allData)
-      .then(function() {
-        return getUPCs(sum.ChainId);
-      });
+    return logStat(allData);
   }
 }
