@@ -91,6 +91,10 @@ module.exports = {
     var fileName = fileParts[fileParts.length - 1];
 
     s3.getObject(bucketFrom, function(err, data) {
+      if (err) {
+        console.log('error', err);
+      }
+
       var purchaseDate = fileName.substr(0, 10);
       var rst = JSON.parse(data.Body);
       var summary = {
