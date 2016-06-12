@@ -135,7 +135,9 @@ module.exports = {
       var next = function() {
         liftAnalysis
           .logSummary(rst, summary)
-          .then(context.done, context.done);
+          .then(function() {
+            context.done(null, 'success');
+          }, context.done);
       };
 
       // post to remote
