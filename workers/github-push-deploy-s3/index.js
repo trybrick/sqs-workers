@@ -157,12 +157,22 @@ module.exports = {
         }
 
         config.data = JSON.parse(event.Message);
-        if (!config.data.ref) {
-            logResult('ref is undefined.');
+
+        var ref = config.data.ref;
+        if (config.data.error)
+        {
+            log('message error', config.data.error);
+            
+            config.data = config.message;
+        }
+        
+        if (!ref) {
+            logResult('ref is undefined!');
             return;
         }
 
-        var ref = config.data.ref.replace('refs/heads/', '');
+
+        ref = ref.replace('refs/heads/', '');
         config.ref = ref;
 
         if (0 > ['master', 'production'].indexOf(ref)) {
