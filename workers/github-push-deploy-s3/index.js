@@ -157,6 +157,11 @@ module.exports = {
         }
 
         config.data = JSON.parse(event.Message);
+        if (!config.data.ref) {
+            logResult('ref is undefined.');
+            return;
+        }
+
         var ref = config.data.ref.replace('refs/heads/', '');
         config.ref = ref;
 
