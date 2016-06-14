@@ -164,6 +164,7 @@ module.exports = {
             log('message error', config.data.error);
             
             config.data = config.message;
+            ref = config.data.ref;
         }
         
         if (!ref) {
