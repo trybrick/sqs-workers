@@ -176,8 +176,8 @@ module.exports = {
         ref = ref.replace('refs/heads/', '');
         config.ref = ref;
 
-        if (0 > ['master', 'production', 'test', 'beta'].indexOf(ref)) {
-            logResult('This service only handle master/production branch.');
+        if (0 > ['tst', 'uat', 'master', 'production'].indexOf(ref)) {
+            logResult('This service only handle tst/uat/master/production branch.');
             return;
         }
 
