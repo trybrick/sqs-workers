@@ -12,7 +12,7 @@ var path = require('path');
 var config = {};
 var today = new Date();
 var myDir = 'tmp';
-myDir = path.combine(__dirname, myDir);
+myDir = path.join(__dirname, myDir);
 var log = function () {
     // do some custom log recording
     // log.call(this, 'My Console!!!');
