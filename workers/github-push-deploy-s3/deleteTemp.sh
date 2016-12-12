@@ -1,3 +1,3 @@
 #!/bin/sh
-echo 'deleting: $(pwd)'
-rm -rf '$(pwd)/../tmp/*'
+echo "deleting: $(pwd)"
+rm -rf "$(pwd)/../tmp/*"
