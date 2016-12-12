@@ -78,8 +78,14 @@ function cleanUp() {
         cmd.stdout.on('data', function (data) {
             log('cleanUp: ' + data);
         });
-        cmd.on('close', Y);
-        cmd.on('error', Y);
+        cmd.on('close', function (code) {
+            log('close: ' + code);
+            Y();
+        });
+        cmdon('error', function (code) {
+            log('error: ' + code)
+            Y();
+        });
     });
 }
 
