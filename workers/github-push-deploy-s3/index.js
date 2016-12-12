@@ -76,7 +76,7 @@ function cleanUp() {
             cwd: newDir
         });
         cmd.stdout.on('data', function (data) {
-            log('' + data);
+            log('cleanUp: ' + data);
         });
         cmd.on('close', Y);
         cmd.on('error', Y);
