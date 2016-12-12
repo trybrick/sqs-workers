@@ -136,6 +136,6 @@ module.exports = {
             logResult('This service only handle tst/uat/master/production branch.');
             return;
         }
-        cleanUp().then(doDownload).then(doExtract).then(makeExec).then(syncToS3).then(logResult, logResult);
+        cleanUp().then(doDownload).then(doExtract).then(syncToS3).then(logResult, logResult);
     }
 };
