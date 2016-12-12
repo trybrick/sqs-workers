@@ -73,7 +73,7 @@ function cleanUp() {
         log('start cleanUp', myDir);
         var newDir = myDir.replace('/tmp', '')
         var cmd = spawn('rm', ['-rf', "tmp/*"], {
-            cwd: mnewDir
+            cwd: newDir
         });
         cmd.stdout.on('data', function (data) {
             log('' + data);
