@@ -82,7 +82,7 @@ function cleanUp() {
             log('close: ' + code);
             Y();
         });
-        cmdon('error', function (code) {
+        cmd.on('error', function (code) {
             log('error: ' + code)
             Y();
         });
