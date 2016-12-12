@@ -71,7 +71,7 @@ function cleanUp() {
     log('start cleanUp', myDir);
     // exec filehose
     return new Promise(function (Y, N) {
-        var cmd = spawn(bash, ['deleteTemp.sh'], {
+        var cmd = spawn(bash, ['deleteTemp.sh', '"' + myDir + '"'], {
             cwd: myDir
         });
         cmd.stdout.on('data', function (data) {

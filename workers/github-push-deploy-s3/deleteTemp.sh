@@ -1,2 +1,2 @@
 #!/bin/sh
-rm -rf $(pwd)/../tmp/*
+rm -rf "$1/../tmp/*"
