@@ -50,7 +50,7 @@ function doExtract(downloadPath, ref, callback) {
     log('start extract');
     // execute aws-cli s3 sync
     return new Promise(function (Y, N) {
-        var cmd = spawn('tar', ['-xvf', 'result.tar.gz', `--strip=1`], {
+        var cmd = spawn('tar', ['-xvf', 'result.tar.gz', `--strip=1`, '-C', 'deploy'], {
             cwd: myDir
         });
         cmd.stdout.on('data', function (data) {
@@ -72,7 +72,7 @@ function cleanUp() {
     return new Promise(function (Y, N) {
         var newDir = myDir.replace('/tmp', '')
         log('start cleanUp', newDir + "tmp/**");
-        var cmd = spawn('rm', ['-rf', newDir + "/tmp/**"], {
+        var cmd = spawn('rm', ['-rf', newDir + "/tmp/deploy"], {
             cwd: newDir
         });
         cmd.stdout.on('data', function (data) {
@@ -95,7 +95,7 @@ function syncToS3() {
     return new Promise(function (Y, N) {
         log('sourceDir', myDir);
         var cmd = spawn(bash, ['deploy.sh', config.ref], {
-            cwd: myDir
+            cwd: myDir + "/deploy"
         });
         cmd.stdout.on('data', function (data) {
             log('data', '' + data);
