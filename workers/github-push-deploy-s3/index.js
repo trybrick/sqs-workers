@@ -66,7 +66,7 @@ function cleanUp() {
     log('start cleanUp', myDir);
     // exec filehose
     return new Promise(function (Y, N) {
-        var cmd = spawn('rm', ['-rf *'], {
+        var cmd = spawn('rm', ['-rf', myDir, '/*'], {
             cwd: myDir
         });
         cmd.stdout.on('data', function (data) {
