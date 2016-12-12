@@ -29,7 +29,7 @@ function doDownload() {
     log('start download');
     // execute aws-cli s3 sync
     return new Promise(function (Y, N) {
-        mkdirp.sync(myDir);
+        mkdirp.sync(myDir + '/deploy');
         var data = config.data;
         var ref = config.ref;
         var downloadUrl = `${data.repository.url}/archive/${ref}.tar.gz`;
