@@ -12,6 +12,11 @@ var path = require('path');
 var config = {};
 var today = new Date();
 var myDir = 'tmp';
+var isWin = /^win/.test(process.platform);
+var bash = '/bin/sh';
+if (isWin) {
+    bash = 'C:\\Program Files\\Git\\bin\\sh.exe'
+}
 myDir = path.join(__dirname, myDir);
 var log = function () {
     // do some custom log recording
@@ -66,7 +71,7 @@ function cleanUp() {
     log('start cleanUp', myDir);
     // exec filehose
     return new Promise(function (Y, N) {
-        var cmd = spawn('rm', ['-rf', myDir, '/*'], {
+        var cmd = spawn(bash, ['deleteTemp.sh'], {
             cwd: myDir
         });
         cmd.stdout.on('data', function (data) {
@@ -77,40 +82,12 @@ function cleanUp() {
     });
 }
 
-function makeExec() {
-    log('make exec');
-    // execute aws-cli s3 sync
-    return new Promise(function (Y, N) {
-        if (!fs.existsSync(myDir + '/deploy.sh')) {
-            console.log('skipping: no deploy.sh');
-            Y();
-            return;
-        }
-        var cmd = spawn('chmod', ['+x', 'deploy.sh'], {
-            cwd: myDir
-        });
-        cmd.stdout.on('data', function (data) {
-            log('' + data);
-        });
-        cmd.on('close', function (code) {
-            code == 0 ? Y(code) : N(code);
-        });
-        cmd.on('error', N);
-    });
-}
-
 function syncToS3() {
     log('start syncToS3');
     // execute aws-cli s3 sync
     return new Promise(function (Y, N) {
         log('sourceDir', myDir);
-        /* troubleshoot permission issue 
-        var cmd = './deploy.sh ' + config.ref;
-        var child = exec(cmd, {
-            cwd: myDir
-        }, Y);
-        */
-        var cmd = spawn('./deploy.sh', [config.ref], {
+        var cmd = spawn(bash, ['deploy.sh', config.ref], {
             cwd: myDir
         });
         cmd.stdout.on('data', function (data) {
