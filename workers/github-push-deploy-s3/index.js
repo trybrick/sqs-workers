@@ -68,10 +68,10 @@ function cleanUp() {
         context.done('invalid work dir: ' + myDir);
         return;
     }
-    log('start cleanUp', myDir);
     // exec filehose
     return new Promise(function (Y, N) {
-        var cmd = spawn(bash, [myDir, '/deleteTemp.sh'], {
+        log('start cleanUp', myDir);
+        var cmd = spawn(bash, ['deleteTemp.sh'], {
             cwd: myDir
         });
         cmd.stdout.on('data', function (data) {
