@@ -6,7 +6,8 @@ var fs = require('fs');
 var os = require('os');
 
 // var workDir = path.join(os.tmpdir(), 'pos-archive');
-var workDir = '/tmp/pos-archive';
+var workDir = 'tmp\\pos-archive';
+workDir = path.join(__dirname, workDir);
 mkdirp.sync(workDir);
 
 // input file schema
@@ -23,6 +24,12 @@ var input = {
     216: ["StoreNumber", "UPC", "PurchaseDateRaw", "PurchasePrice", "ExternalId", "Quantity", "Weight", "TransactionType"],
     217: ["StoreNumber", "UPC", "PurchaseDateRaw", "PurchasePrice", "ExternalId", "Quantity", "Weight", "TransactionType"],
     218: ["StoreNumber", "UPC", "PurchaseDateRaw", "PurchasePrice", "ExternalId", "Quantity", "Weight", "TransactionType"]
+  },
+  sources: {
+    "PICKNSAVE": 215,
+    "COPPS": 216,
+    "METROMARKET": 217,
+    "MARIANOS": 218
   }
 };
 
@@ -115,8 +122,8 @@ module.exports = {
 
     var fileName = path.basename(fullPath);
     var fileNameNoExtension = fileName.replace('.hif', '');
-    var fileParts = fileNameNoExtension.split('-');
-    var chainId = fileParts[0];
+    var fileParts = fileNameNoExtension.split('_');
+    var chainId = input.sources[fileParts[0]];
     var schemaIdx = input.schema[chainId];
     if (fileParts[1]) {
       logId = fileParts[1];
