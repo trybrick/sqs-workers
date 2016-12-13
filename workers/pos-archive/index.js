@@ -32,10 +32,7 @@ var log = function() {
 function downloadExtract(bucketFrom) {
   return new Promise(function(resolve, reject) {
     var fileParts = bucketFrom.Key.split('/');
-    var chainId = fileParts[2];
-    var oldFileName = fileParts[fileParts.length - 1];
-    var newName = `${chainId}-${oldFileName}`;
-    var fileName = path.join(myDir, newName);
+    var fileName = path.join(myDir,  fileParts[fileParts.length - 1]);
     var outputFileName = fileName.replace(/(\.zip)+$/gi, '.hif')
     var file = fs.createWriteStream(outputFileName);
     config.logFile = bucketFrom.Key.replace(/(\.zip)+$/gi, '.log');
