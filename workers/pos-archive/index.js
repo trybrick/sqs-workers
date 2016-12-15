@@ -73,7 +73,7 @@ function cleanUp(context) {
             Y();
         });
         cmd.on('error', function (code) {
-            log('error: ' + code)
+            log('error: ' + code);
             Y();
         });
     });
@@ -94,8 +94,9 @@ function splitFiles(filePath) {
             code == 0 ? Y(code) : N(code);
         });
         //cmd.on('error', N);
-        cmd.on('error', function (code) {
-            log('error: ' + code)
+        cmd.on('error', function (code, x) {
+            log('error: ' + code);
+            log('err:' + x);
             N();
         });
     });
