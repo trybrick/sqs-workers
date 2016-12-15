@@ -68,6 +68,9 @@ function cleanUp(context) {
         cmd.stdout.on('data', function (data) {
             log('cleanUp: ' + data);
         });
+        cmd.stderr.on('data', function (data) {
+            log('' + data);
+        });
         cmd.on('close', function (code) {
             log('close: ' + code);
             Y();
@@ -92,6 +95,9 @@ function splitFiles(filePath) {
         cmd.stdout.on('data', function (data) {
             log('' + data);
         });
+        cmd.stderr.on('data', function (data) {
+            log('' + data);
+        });
         cmd.on('close', function (code, x) {
             code == 0 ? Y(code) : N(code);
         });
@@ -110,6 +116,9 @@ function syncToS3() {
             cwd: sourceDir
         });
         cmd.stdout.on('data', function (data) {
+            log('' + data);
+        });
+        cmd.stderr.on('data', function (data) {
             log('' + data);
         });
         cmd.on('close', function (code) {
