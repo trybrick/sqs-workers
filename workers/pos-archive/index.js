@@ -112,6 +112,7 @@ function syncToS3() {
             log('' + data);
         });
         cmd.on('close', function (code) {
+            mkdirp(myDir);
             code == 0 ? Y(code) : N(code);
         });
         cmd.on('error', N);
