@@ -83,8 +83,10 @@ function splitFiles(filePath) {
     // exec filehose
     return new Promise(function (Y, N) {
         var newDir = path.resolve(myDir + "\\..\\..\\..\\..");
-        log('start splitFiles', newDir);
-        var cmd = spawn(newDir + '\\node_modules\\.bin\\filehose.cmd', ['..\\..\\archive.config.js', filePath], {
+        var newCmd = [newDir + '\\node_modules\\.bin\\filehose.cmd', '..\\..\\archive.config.js', filePath];
+        log('start splitFiles ', myDir);
+        log('start splitFilez ', newCmd.join(' '));
+        var cmd = spawn(newCmd.join(' '), [], {
             cwd: myDir
         });
         cmd.stdout.on('data', function (data) {
