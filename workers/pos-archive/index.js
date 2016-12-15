@@ -80,10 +80,9 @@ function cleanUp(context) {
 }
 
 function splitFiles(filePath) {
-    log('start splitFiles', filePath);
     // exec filehose
     return new Promise(function (Y, N) {
-        var newDir = myDir + "\\..\\..\\..\\..";
+        var newDir = path.resolve(myDir + "\\..\\..\\..\\..");
         log('start splitFiles', newDir);
         var cmd = spawn(newDir + '\\node_modules\\.bin\\filehose.cmd', [configFile, filePath], {
             cwd: myDir
