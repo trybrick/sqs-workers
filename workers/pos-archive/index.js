@@ -90,7 +90,9 @@ function splitFiles(filePath) {
         cmd.stdout.on('data', function (data) {
             log('' + data);
         });
-        cmd.on('close', function (code) {
+        cmd.on('close', function (code, x) {
+            log('error: ' + code);
+            log('err:' + x);
             code == 0 ? Y(code) : N(code);
         });
         //cmd.on('error', N);
