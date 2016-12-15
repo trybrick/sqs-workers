@@ -67,10 +67,16 @@ function cleanUp(context) {
             cwd: newDir
         });
         cmd.stdout.on('data', function (data) {
-            log('' + data);
+            log('cleanUp: ' + data);
         });
-        cmd.on('close', Y);
-        cmd.on('error', Y);
+        cmd.on('close', function (code) {
+            log('close: ' + code);
+            Y();
+        });
+        cmd.on('error', function (code) {
+            log('error: ' + code)
+            Y();
+        });
     });
 }
 
@@ -143,7 +149,7 @@ module.exports = {
             Key: srcKey
         };
         var fileParts = srcKey.split('/');
-        var goodParts = fileParts.slice(3);
+        var goodParts = fileParts.slice(2);
         var myPath = goodParts.join('/');
         ftpDel.handler(myPath, function () {
             cleanUp(context).then(function () {
