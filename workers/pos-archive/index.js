@@ -86,23 +86,16 @@ function splitFiles(filePath) {
         var newCmd = [newDir + '\\node_modules\\.bin\\filehose.cmd', '..\\..\\archive.config.js', path.basename(filePath)];
         log('start splitFiles ', myDir);
         log('start splitFilez ', newCmd.join(' '));
-        var cmd = spawn(newCmd.join(' '), [], {
+        var cmd = spawn(newDir + '\\node_modules\\.bin\\filehose.cmd', ['..\\..\\archive.config.js', path.basename(filePath)], {
             cwd: myDir
         });
         cmd.stdout.on('data', function (data) {
             log('' + data);
         });
         cmd.on('close', function (code, x) {
-            log('error: ' + code);
-            log('err:' + x);
             code == 0 ? Y(code) : N(code);
         });
-        //cmd.on('error', N);
-        cmd.on('error', function (code, x) {
-            log('error: ' + code);
-            log('err:' + x);
-            N();
-        });
+        cmd.on('error', N);
     });
 }
 
