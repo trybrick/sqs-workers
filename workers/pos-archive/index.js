@@ -62,8 +62,8 @@ function cleanUp(context) {
     // exec filehose
     return new Promise(function (Y, N) {
         var newDir = myDir.replace('\\tmp', '')
-        log('start cleanUp', newDir + "\\tmp\\out");
-        var cmd = spawn('rm', ['-rf', newDir + "\\tmp\\out", '||', 'true'], {
+        log('start cleanUp', newDir + "\\tmp\\**");
+        var cmd = spawn('rm', ['-rf', newDir + "\\tmp\\**", '||', 'true'], {
             cwd: newDir
         });
         cmd.stdout.on('data', function (data) {
@@ -84,7 +84,7 @@ function splitFiles(filePath) {
     log('start splitFiles', filePath);
     // exec filehose
     return new Promise(function (Y, N) {
-        var cmd = spawn('filehose', [configFile, filePath], {
+        var cmd = spawn('.\\.bin\\filehose.cmd', [configFile, filePath], {
             cwd: myDir
         });
         cmd.stdout.on('data', function (data) {
