@@ -63,7 +63,7 @@ function cleanUp(context) {
     return new Promise(function (Y, N) {
         log('start cleanUp', myDir);
         var cmd = spawn('rm', ['-rf', myDir, '||', 'true'], {
-            cwd: newDir.replace("\\tmp\\pos-archive", '')
+            cwd: myDir.replace("\\tmp\\pos-archive", '')
         });
         cmd.stdout.on('data', function (data) {
             log('cleanUp: ' + data);
