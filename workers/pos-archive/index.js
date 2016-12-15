@@ -94,7 +94,11 @@ function splitFiles(filePath) {
         cmd.on('close', function (code) {
             code == 0 ? Y(code) : N(code);
         });
-        cmd.on('error', N);
+        //cmd.on('error', N);
+        cmd.on('error', function (code) {
+            log('error: ' + code)
+            N();
+        });
     });
 }
 
