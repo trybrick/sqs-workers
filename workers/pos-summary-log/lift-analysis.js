@@ -56,7 +56,8 @@ function statlog(data, cb) {
 
 function logStat(data) {
   return new Promise((resolve, reject) => {
-    statlog(data, resolve);
+    resolve();
+//     statlog(data, resolve);
   });
 }
 
