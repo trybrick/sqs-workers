@@ -6,65 +6,8 @@ var AWS = require('aws-sdk');
 var _ = require('lodash');
 var s3 = new AWS.S3();
 var Promise = require('bluebird');
-var request = require('request');
-var crypto = require('crypto');
 var config = require('../../config');
 var liftAnalysis = require('./lift-analysis');
-
-var azureKeys = config.AZURE_STORAGE_STRING.split(':');
-var accountName = azureKeys[0];
-var secureKey = azureKeys[1];
-var tableName = 'posreport';
-console.log(azureKeys);
-
-function getSignature(stringToSign) {
-  var shahmac = crypto.createHmac('SHA256', new Buffer(secureKey, 'base64'));
-  return shahmac.update(stringToSign, 'utf-8').digest('base64');
-}
-
-function getHeaders(path) {
-  var headers = {};
-  var date = (new Date()).toUTCString();
-  var stringToSign = `${date}\n/${accountName}/${path}`;
-  var sig = getSignature(stringToSign);
-  headers.Authorization = `SharedKeyLite ${accountName}:${sig}`;
-  headers['x-ms-date'] = date;
-  headers['x-ms-version'] = '2014-02-14';
-  headers.Accept = 'application/json';
-  return headers;
-}
-
-function uploadAzure(payload) {
-  return new Promise((resolve, reject) => {
-    var rowKey = payload.RowKey;
-    var partitionKey = payload.PartitionKey;
-    //var path = `${tableName}(PartitionKey='${partitionKey}',RowKey='${rowKey}')`;
-    var path = `${tableName}()`;
-    var urlPath = `https://${accountName}.table.core.windows.net/${path}`;
-    var opts = {
-      method: 'POST',
-      url: urlPath,
-      headers: getHeaders(path)
-    };
-    opts.headers['Content-Type'] = 'application/json';
-    //opts.headers['If-Match'] = '*';
-    opts.json = payload;
-    //delete payload['RowKey'];
-    //delete payload['PartitionKey'];
-
-    //console.log(JSON.stringify(opts, null, 2));
-
-    request(opts
-      , (error, raw, response) => {
-        // console.log(error, 'response', response);
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
-  });
-}
 
 // this is not a long running job and it should be on AWS Lambda
 // we have it here as an example of a sqs-workers job
@@ -136,18 +79,11 @@ module.exports = {
       });
 
       summary.StoreData = JSON.stringify(storeData);
-      var next = function() {
-        liftAnalysis
-          .logSummary(rst, summary)
-          .then(function() {
-            context.done(null, 'success');
-          }, context.done);
-      };
-
-      // post to remote
-      // console.log(JSON.stringify(summary, null, 2));
-      uploadAzure(summary)
-        .then(next, next);
+      liftAnalysis
+        .logSummary(rst, summary)
+        .then(function() {
+          context.done(null, 'success');
+        }, context.done);
     });
   }
 };

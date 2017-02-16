@@ -1,8 +1,8 @@
-var http = require('http');
+var https = require('https');
 var _ = require('lodash');
 var Promise = require('bluebird');
 var config = require('../../config');
-var statKey = config.STAT_KEY;
+var statKey = config.BRICK_STAT;
 var moment = require('moment');
 
 var banners = {
@@ -14,19 +14,20 @@ var banners = {
 var i = 0;
 
 function statlog(data, cb) {
-  var path = `/ez`;
+  var path = `/api/v2/mstats/many/pos`;
 
   var payload = {
-    "ezkey": statKey,
-    "data": data
+    "items": data
   };
   var post_data = JSON.stringify(payload);
   console.log(JSON.stringify(payload, null, 2))
 
   var options = {
-    host: 'api.stathat.com',
+    host: 'api.brickinc.net',
     path: path,
     method: 'POST',
+    auth: statKey,
+    port: 443,
     headers: {
       'Content-Type': 'application/json',
       'Content-Length': Buffer.byteLength(post_data)
@@ -49,15 +50,15 @@ function statlog(data, cb) {
     });
   }
 
-  var post_req = http.request(options, callback);
+  var post_req = https.request(options, callback);
   post_req.write(post_data);
   post_req.end();
 }
 
 function logStat(data) {
   return new Promise((resolve, reject) => {
-    resolve();
-//     statlog(data, resolve);
+//    resolve();
+    statlog(data, resolve);
   });
 }
 
@@ -73,20 +74,21 @@ module.exports = {
     console.log(sum.PurchaseDate, pDate);
 
     // add 8 hours to make sure it's on the right day
-    var t = Math.floor((pDate.getTime() + 10 * 3600000) / 1000);
+    // var t = Math.floor((pDate.getTime() + 10 * 3600000) / 1000);
+    var dt = pDate.toISOString();
 
     // push chain
     allData.push({
-      "stat": key,
-      "value": sum.SaleSum / 1000,
-      "t": t
+      "k": key,
+      "v": sum.SaleSum / 1000,
+      "dt": dt
     });
 
     _.each(rst.store, function(v, k) {
       allData.push({
-        "stat": `c${sum.ChainId}-sales-1k-${banner}-storenbr-${k}`,
-        "value": v.sum / 1000,
-        "t": t
+        "k": `c${sum.ChainId}-sales-1k-${banner}-storenbr-${k}`,
+        "v": v.sum / 1000,
+        "dt": dt
       });
     });
 
