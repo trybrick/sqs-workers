@@ -26,11 +26,11 @@ function statlog(data, cb) {
     host: 'api.brickinc.net',
     path: path,
     method: 'POST',
-    auth: statKey,
     port: 443,
     headers: {
       'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(post_data)
+      'Content-Length': Buffer.byteLength(post_data),
+      'Authorization': 'Basic ' + new Buffer(statKey).toString('base64')
     }
   };
 
