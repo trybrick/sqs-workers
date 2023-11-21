@@ -58,7 +58,7 @@ function doDownload() {
     mkdirp.sync(myDir + '/deploy');
     var data = config.data;
     var ref = config.ref;
-    var downloadUrl = `${data.repository.url}/archive/${ref}.tar.gz`;
+    var downloadUrl = `${data.repository.url}/archive/refs/heads/${ref}.tar.gz`;
     return downloadFile(downloadUrl, `${myDir}/result.tar.gz`);
 }
 
@@ -153,9 +153,9 @@ module.exports = {
             logResult('ref is undefined!');
             return;
         }
-        var newRef = ref.replace('refs/heads/', '');
+        ref = ref.replace('refs/heads/', '');
         config.ref = ref;
-        if (0 > ['tst', 'uat', 'master', 'production'].indexOf(newRef)) {
+        if (0 > ['tst', 'uat', 'master', 'production'].indexOf(ref)) {
             logResult('This service only handle tst/uat/master/production branch.');
             return;
         }
