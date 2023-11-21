@@ -35,12 +35,7 @@ function doDownload() {
         var downloadUrl = `${data.repository.url}/archive/${ref}.tar.gz`;
         console.log('download url ' + downloadUrl);
         var cmd = spawn('curl', ['-sL', `"${downloadUrl}"`, '-o', `${myDir}/result.tar.gz`], {
-            cwd: myDir,
-            detached: true,
-            stdio: 'inherit'
-        });
-        cmd.stdout.on('data', function (data) {
-            log('' + data);
+            cwd: myDir
         });
         cmd.on('close', function (code) {
             code == 0 ? Y(code) : N(code);
