@@ -33,6 +33,7 @@ function doDownload() {
         var data = config.data;
         var ref = config.ref;
         var downloadUrl = `${data.repository.url}/archive/${ref}.tar.gz`;
+        console.log('download url ' + ref);
         var cmd = spawn('curl', ['-Lk', '-o', `${myDir}/result.tar.gz`, downloadUrl], {
             cwd: myDir
         });
