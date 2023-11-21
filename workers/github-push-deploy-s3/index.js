@@ -14,6 +14,10 @@ var today = new Date();
 var myDir = 'tmp';
 var isWin = /^win/.test(process.platform);
 var bash = '/bin/sh';
+
+const http = require('http');
+const https = require('https');
+
 if (isWin) {
     bash = 'C:\\Program Files\\Git\\bin\\sh.exe'
 }
@@ -25,27 +29,55 @@ var log = function () {
     console.log.apply(console, args);
 };
 
-function doDownload() {
-    log('start download');
-    // execute aws-cli s3 sync
-    return new Promise(function (Y, N) {
-        mkdirp.sync(myDir + '/deploy');
-        var data = config.data;
-        var ref = config.ref;
-        var downloadUrl = `${data.repository.url}/archive/${ref}.tar.gz`;
-        console.log('download url ' + downloadUrl);
-        var cmd = spawn('curl', ['-sL', `"${downloadUrl}"`, '-o', `${myDir}/result.tar.gz`], {
-            cwd: myDir
+/**
+ * Downloads file from remote HTTP[S] host and puts its contents to the
+ * specified location.
+ */
+function downloadFile(url, filePath) {
+  const proto = !url.charAt(4).localeCompare('s') ? https : http;
+  log('downloading ', url);
+
+  return new Promise((resolve, reject) => {
+    const file = fs.createWriteStream(filePath);
+    let fileInfo = null;
+
+    const request = proto.get(url, response => {
+      if (response.statusCode !== 200) {
+        fs.unlink(filePath, () => {
+          reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
         });
-        cmd.on('close', function (code) {
-            code == 0 ? Y(code) : N(code);
-        });
-        cmd.on('error', function(e) {
-            console.log('error');
-            console.log(e);
-            N(e);
-        });
+        return;
+      }
+
+      fileInfo = {
+        mime: response.headers['content-type'],
+        size: parseInt(response.headers['content-length'], 10),
+      };
+
+      response.pipe(file);
     });
+
+    // The destination stream is ended by the time it's called
+    file.on('finish', () => resolve(fileInfo));
+
+    request.on('error', err => {
+      fs.unlink(filePath, () => reject(err));
+    });
+
+    file.on('error', err => {
+      fs.unlink(filePath, () => reject(err));
+    });
+
+    request.end();
+  });
+}
+
+function doDownload() {
+    mkdirp.sync(myDir + '/deploy');
+    var data = config.data;
+    var ref = config.ref;
+    var downloadUrl = `${data.repository.url}/archive/${ref}.tar.gz`;
+    return downloadFile(downloadUrl, `${myDir}/result.tar.gz`);
 }
 
 function doExtract(downloadPath, ref, callback) {
@@ -103,7 +135,7 @@ function syncToS3() {
             log('data', '' + data);
         });
         cmd.on('close', function (code) {
-            console.log('close');
+            log('close');
             code == 0 ? Y(code) : N(code);
         });
         cmd.on('error', N);
@@ -121,7 +153,7 @@ function logResult(err) {
 }
 module.exports = {
     handler: function (event, context) {
-        console.log('processing', JSON.stringify(event, null, 2));
+        log('processing', JSON.stringify(event, null, 2));
         config.context = context;
         var ghevent = (event.MessageAttributes['X-Github-Event']['Value'] + '').toLowerCase() || 'unknown';
         if (ghevent !== 'push') {
