@@ -14,6 +14,7 @@ var today = new Date();
 var myDir = 'tmp';
 var isWin = /^win/.test(process.platform);
 var bash = '/bin/sh';
+var url = require('url');
 
 if (isWin) {
     bash = 'C:\\Program Files\\Git\\bin\\sh.exe'
@@ -30,7 +31,7 @@ var log = function () {
  * Downloads file from remote HTTP[S] host and puts its contents to the
  * specified location.
  */
-function downloadFile(url, filename) {
+function downloadFile(uri, filename) {
     var protocol = url.parse(uri).protocol.slice(0, -1);
 
     return new Promise((resolve, reject) => {
