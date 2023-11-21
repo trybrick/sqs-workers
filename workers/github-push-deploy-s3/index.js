@@ -137,9 +137,9 @@ module.exports = {
             logResult('ref is undefined!');
             return;
         }
-        ref = ref.replace('refs/heads/', '');
+        var newRef = ref.replace('refs/heads/', '');
         config.ref = ref;
-        if (0 > ['tst', 'uat', 'master', 'production'].indexOf(ref)) {
+        if (0 > ['tst', 'uat', 'master', 'production'].indexOf(newRef)) {
             logResult('This service only handle tst/uat/master/production branch.');
             return;
         }
