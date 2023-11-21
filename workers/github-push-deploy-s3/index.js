@@ -15,9 +15,6 @@ var myDir = 'tmp';
 var isWin = /^win/.test(process.platform);
 var bash = '/bin/sh';
 
-const http = require('http');
-const https = require('https');
-
 if (isWin) {
     bash = 'C:\\Program Files\\Git\\bin\\sh.exe'
 }
@@ -33,43 +30,27 @@ var log = function () {
  * Downloads file from remote HTTP[S] host and puts its contents to the
  * specified location.
  */
-function downloadFile(url, filePath) {
-  const proto = !url.charAt(4).localeCompare('s') ? https : http;
-  log('downloading ', url);
+function downloadFile(url, filename) {
+    var protocol = url.parse(uri).protocol.slice(0, -1);
 
-  return new Promise((resolve, reject) => {
-    const file = fs.createWriteStream(filePath);
-    let fileInfo = null;
-
-    const request = proto.get(url, response => {
-      if (response.statusCode !== 200) {
-        fs.unlink(filePath, () => {
-          reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
-        });
-        return;
-      }
-
-      fileInfo = {
-        mime: response.headers['content-type'],
-        size: parseInt(response.headers['content-length'], 10),
-      };
-
-      response.pipe(file);
+    return new Promise((resolve, reject) => {
+        var onError = function (e) {
+            fs.unlink(filename);
+            reject(e);
+        }
+        require(protocol).get(uri, function(response) {
+            if (response.statusCode >= 200 && response.statusCode < 300) {
+                var fileStream = fs.createWriteStream(filename);
+                fileStream.on('error', onError);
+                fileStream.on('close', resolve);
+                response.pipe(fileStream);
+            } else if (response.headers.location) {
+                resolve(downloadFile(response.headers.location, filename));
+            } else {
+                reject(new Error(response.statusCode + ' ' + response.statusMessage));
+            }
+        }).on('error', onError);
     });
-
-    // The destination stream is ended by the time it's called
-    file.on('finish', () => resolve(fileInfo));
-
-    request.on('error', err => {
-      fs.unlink(filePath, () => reject(err));
-    });
-
-    file.on('error', err => {
-      fs.unlink(filePath, () => reject(err));
-    });
-
-    request.end();
-  });
 }
 
 function doDownload() {
